@@ -1,0 +1,31 @@
+#!/bin/bash
+# $Id: chkurl,v 1.1 2021/04/01 18:22:41 fulford Exp $
+# $Source: /src/admin/usr/local/etc/RCS/chkurl,v $
+# $Revision: 1.1 $
+# Author C W Fulford.
+# Copyright 2014 (c) C W Fulford.
+# Licensed for public use under the LGPL, .
+# For assistance contact fulford@fulford.net 0709 229 5385
+########################################################################
+cmd=`basename $0`
+syntax="$cmd [-c config] [-d(ebug)] [-l] [-i] [-r <email_rcpts>] [-t] [-v(erbose)] clientid"
+while [ $# -gt 0 ] ;do
+	case $1 in 
+		-c) config=$2;shift 2;;	
+		-d) debug=:;set -x;shift;;
+		-i) issue=$2;shift 2;;
+		-l) log=:;shift;;
+		-r) rcpts=$2;shift 2;;
+		-t) timings=y;shift;;
+		-v) verbose=:;shift;;
+		 *) clientid=$1;shift;;
+	esac
+done
+
+for s in https://www.fulford.net http://activeace.citylinux.com ;do
+	curl -Is $s |grep OK ||{ 
+		mailx -s "$s not responding" <<- . 07935728612@txtlocal.co.uk
+			Check webserver now.
+		.
+done
+		
